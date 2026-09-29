@@ -1,0 +1,71 @@
+version: 2
+
+project_name: ripr
+
+before:
+  hooks:
+    - go mod tidy
+    - go test ./...
+
+builds:
+  - id: ripr
+    main: ./cmd/ripr
+    binary: ripr
+    env:
+      - CGO_ENABLED=0
+    goos:
+      - darwin
+      - linux
+    goarch:
+      - arm64
+      - amd64
+    ldflags:
+      - -s -w -X main.version={{ .Version }}
+
+archives:
+  - id: ripr
+    formats: [tar.gz]
+    name_template: "{{ .ProjectName }}_{{ .Version }}_{{ .Os }}_{{ .Arch }}"
+    files:
+      - README.md
+      - DESIGN.md
+
+checksum:
+  name_template: checksums.txt
+
+changelog:
+  use: git
+  sort: asc
+  filters:
+    exclude:
+      - "^chore"
+      - "^ci"
+
+release:
+  github:
+    owner: wesburch
+    name: ripr
+  draft: false
+  prerelease: auto
+
+brews:
+  - name: ripr
+    repository:
+      owner: wesburch
+      name: homebrew-tap
+      branch: main
+      token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
+    directory: Formula
+    homepage: https://github.com/wesburch/ripr
+    description: Rip the audio out of any video link, in the terminal.
+    license: MIT
+    dependencies:
+      - name: yt-dlp
+      - name: ffmpeg
+    install: |
+      bin.install "ripr"
+    test: |
+      assert_match "ripr", shell_output("#{bin}/ripr --version")
+    commit_author:
+      name: goreleaser
+      email: wburch84@gmail.com

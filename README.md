@@ -12,17 +12,34 @@ ripr crypt                         print history
 ripr doctor                        check yt-dlp and ffmpeg
 ```
 
-## Requirements
+## Install
 
-- macOS or Linux, a UTF-8 terminal with a monospace font that has braille and
-  block glyphs (JetBrains Mono, SF Mono, Menlo, Iosevka all do), at least 80×28.
-- `yt-dlp` and `ffmpeg` on PATH. `ripr doctor` tells you what's missing and the
-  doctor screen inside the app offers to run `brew install` for you.
+```
+brew install wesburch/tap/ripr
+```
 
-## Build
+That pulls in yt-dlp and ffmpeg too. Or build from source:
 
 ```
 go build -o ripr ./cmd/ripr
+```
+
+## Requirements
+
+- macOS or Linux, a UTF-8 terminal with a monospace font that has braille and
+  block glyphs (JetBrains Mono, SF Mono, Menlo, Iosevka all do), at least 80×24.
+- `yt-dlp` and `ffmpeg` on PATH. `ripr doctor` tells you what's missing and the
+  doctor screen inside the app offers to run `brew install` for you.
+
+## Releasing
+
+Releases are cut by goreleaser on a version tag and the Homebrew formula is
+written to `wesburch/homebrew-tap` automatically. The workflow needs a
+`HOMEBREW_TAP_TOKEN` repository secret: a fine-grained personal access token
+with contents read/write on the tap repo.
+
+```
+git tag v0.2.0 && git push origin v0.2.0
 ```
 
 Go 1.27. No cgo. Dependencies are Bubble Tea, Lip Gloss, Bubbles, go-toml and a

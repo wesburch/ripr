@@ -1,0 +1,5 @@
+# ripr
+.DS_Store
+/ripr
+/dist/
+*.corrupt-*
